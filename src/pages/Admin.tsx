@@ -14,7 +14,7 @@ export function Admin() {
   useEffect(() => {
     const checkAdmin = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user || user.email !== 'admin@admin') {
+      if (!user || (user.email !== 'admin@admin' && user.email !== 'admin@admin.com')) {
         navigate('/');
         return;
       }

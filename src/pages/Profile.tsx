@@ -217,7 +217,7 @@ export function Profile() {
           </div>
 
           <div className="mt-12 flex flex-col items-center gap-4">
-            {user?.email === 'admin@admin' && (
+            {(user?.email === 'admin@admin' || user?.email === 'admin@admin.com') && (
               <button
                 onClick={() => navigate('/admin')}
                 className="flex items-center gap-2 px-6 py-2 rounded-lg border border-magic-gold/30 bg-magic-gold/5 text-magic-gold hover:bg-magic-gold/20 transition-all font-medieval text-xs uppercase tracking-widest"
