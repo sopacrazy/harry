@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Particles } from '../components/Particles';
+import { DiceRoller } from '../components/DiceRoller';
 import { BookOpen, Scroll } from 'lucide-react';
 
 export function Landing() {
@@ -18,6 +19,9 @@ export function Landing() {
 
       {/* Particles Effect */}
       <Particles />
+
+      {/* Dice Roller System */}
+      <DiceRoller />
 
       {/* Ornamental Golden Border */}
       <div className="pointer-events-none absolute inset-4 z-10 rounded-xl border-2 border-magic-gold/30 md:inset-8">
@@ -84,6 +88,26 @@ export function Landing() {
               <BookOpen className="h-6 w-6" />
               <span>Compêndio de Azarações e Feitiços</span>
             </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.6 }}
+          >
+            <button 
+              onClick={() => {
+                const event = new CustomEvent('open-dice-roller');
+                window.dispatchEvent(event);
+              }}
+              className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg border border-magic-gold/40 bg-[#1a140a] px-6 py-4 font-medieval text-lg text-magic-gold transition-all duration-300 hover:border-magic-gold hover:bg-[#2a1f0f] hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:-translate-y-1 cursor-pointer"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-magic-gold/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
+                <path d="M12 2L2 12L12 22L22 12L12 2Z" />
+              </svg>
+              <span>Sistema de Rolagem (d20)</span>
+            </button>
           </motion.div>
         </div>
       </motion.div>
