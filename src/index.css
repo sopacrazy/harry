@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-medieval: "MedievalSharp", cursive;
+  --font-crimson: "Crimson Text", serif;
+  
+  --color-magic-gold: #d4af37;
+  --color-magic-dark: #1a1a1a;
+  --color-parchment: #f4e4bc;
+}
+
+body {
+  background-color: var(--color-magic-dark);
+  color: var(--color-parchment);
+  font-family: var(--font-crimson);
+}
