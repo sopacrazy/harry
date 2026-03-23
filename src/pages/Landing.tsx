@@ -1,10 +1,21 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Particles } from '../components/Particles';
-import { DiceRoller } from '../components/DiceRoller';
-import { BookOpen, Scroll } from 'lucide-react';
+import { BookOpen, Scroll, LogIn, User } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export function Landing() {
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsLogged(!!user);
+    };
+    checkUser();
+  }, []);
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-[#0a0a0a] flex flex-col items-center justify-center p-4">
       {/* Background Image with Overlay */}
@@ -19,9 +30,6 @@ export function Landing() {
 
       {/* Particles Effect */}
       <Particles />
-
-      {/* Dice Roller System */}
-      <DiceRoller />
 
       {/* Ornamental Golden Border */}
       <div className="pointer-events-none absolute inset-4 z-10 rounded-xl border-2 border-magic-gold/30 md:inset-8">
@@ -44,71 +52,66 @@ export function Landing() {
           transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
           className="mb-8"
         >
-          <h1 className="font-medieval text-4xl font-bold tracking-wider text-magic-gold drop-shadow-[0_0_15px_rgba(212,175,55,0.5)] md:text-6xl">
-            Hogwarts: Magical Britain - Tales Untold
+          <h1 className="font-medieval text-4xl font-bold tracking-wider text-magic-gold drop-shadow-[0_0_15px_rgba(212,175,55,0.5)] md:text-6xl uppercase">
+            Hogwarts: Tales Untold
           </h1>
           <div className="mx-auto mt-4 h-px w-3/4 bg-gradient-to-r from-transparent via-magic-gold/50 to-transparent" />
         </motion.div>
 
         <motion.p 
-          className="mb-12 font-crimson text-xl italic text-parchment/80 md:text-2xl"
+          className="mb-12 font-crimson text-lg italic text-parchment/80 md:text-2xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
         >
-          "Selecione o seu caminho de aprendizado, bruxo."
+          "Sua jornada bruxa começa aqui. Entre para o Salão Principal."
         </motion.p>
 
-        <div className="flex w-full flex-col gap-6">
+        <div className="flex w-full flex-col gap-5">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
+            transition={{ duration: 0.6, delay: 1 }}
           >
             <Link 
-              to="/grade"
-              className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg border border-magic-gold/40 bg-[#1a140a] px-6 py-4 font-medieval text-lg text-magic-gold transition-all duration-300 hover:border-magic-gold hover:bg-[#2a1f0f] hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:-translate-y-1"
+              to={isLogged ? "/perfil" : "/auth"}
+              className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg bg-magic-gold px-6 py-4 font-medieval text-xl text-black transition-all duration-300 hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] active:scale-95"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-magic-gold/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <Scroll className="h-6 w-6" />
-              <span>Grade Curricular Oficial de Hogwarts</span>
+              <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              {isLogged ? <User className="h-6 w-6" /> : <LogIn className="h-6 w-6" />}
+              <span>{isLogged ? "Acessar Salão Comunal" : "Entrar em Hogwarts"}</span>
             </Link>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 1.4 }}
-          >
-            <Link 
-              to="/feiticos"
-              className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg border border-magic-gold/40 bg-[#1a140a] px-6 py-4 font-medieval text-lg text-magic-gold transition-all duration-300 hover:border-magic-gold hover:bg-[#2a1f0f] hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:-translate-y-1"
+          <div className="grid grid-cols-2 gap-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-magic-gold/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <BookOpen className="h-6 w-6" />
-              <span>Compêndio de Azarações e Feitiços</span>
-            </Link>
-          </motion.div>
+              <Link 
+                to="/grade"
+                className="group flex flex-col items-center justify-center p-4 border border-magic-gold/20 rounded-xl bg-[#1a140a] hover:bg-magic-gold/5 transition-colors"
+              >
+                <Scroll className="h-6 w-6 text-magic-gold mb-2" />
+                <span className="font-medieval text-xs text-magic-gold/60">GRADE</span>
+              </Link>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.6 }}
-          >
-            <button 
-              onClick={() => {
-                const event = new CustomEvent('open-dice-roller');
-                window.dispatchEvent(event);
-              }}
-              className="group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-lg border border-magic-gold/40 bg-[#1a140a] px-6 py-4 font-medieval text-lg text-magic-gold transition-all duration-300 hover:border-magic-gold hover:bg-[#2a1f0f] hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:-translate-y-1 cursor-pointer"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-magic-gold/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-                <path d="M12 2L2 12L12 22L22 12L12 2Z" />
-              </svg>
-              <span>Sistema de Rolagem (d20)</span>
-            </button>
-          </motion.div>
+              <Link 
+                to="/feiticos"
+                className="group flex flex-col items-center justify-center p-4 border border-magic-gold/20 rounded-xl bg-[#1a140a] hover:bg-magic-gold/5 transition-colors"
+              >
+                <BookOpen className="h-6 w-6 text-magic-gold mb-2" />
+                <span className="font-medieval text-xs text-magic-gold/60">FEITIÇOS</span>
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
     </div>
